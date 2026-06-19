@@ -2886,9 +2886,17 @@ class Eynollah:
                        for image_filename in filter(is_image_filename,
                                                     os.listdir(dir_in))]
         elif image_filename:
-            ls_imgs = [image_filename]
+            if image_filename.endswith(".txt"):
+                # Handle text file list containing absolute paths
+                self.logger.info(f"Reading image list from: {image_filename}")
+                with open(image_filename, 'r', encoding='utf-8') as f:
+                    # Strip whitespace and ignore empty lines
+                    ls_imgs = [line.strip() for line in f if line.strip()]
+            else:
+                # Handle single image file
+                ls_imgs = [image_filename]
         else:
-            raise ValueError("run requires either a single image filename or a directory")
+            raise ValueError("run requires either a single image filename, a text file list, or a directory")
 
         for img_filename in ls_imgs:
             self.logger.info(img_filename)
